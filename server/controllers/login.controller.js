@@ -79,13 +79,7 @@ module.exports = function(app) {
 		Clinic.findOne({clinicName: req.body.clinicName}, function(err, clinic){
 			if (err) throw err;
 			console.log(clinic);
-			clinic.patients.push({
-				email: req.body.email,
-				checkedIn: false,
-				month: req.body.month,
-				day: req.body.day,
-				time: req.body.time
-			});
+			clinic.patients.push(newAppid);
 			clinic.save(function(err){
 				if (err) throw err;
 				console.log("Yayy finished making new appointment");

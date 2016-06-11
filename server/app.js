@@ -4,6 +4,9 @@ var config = require('./config/index');
 var mongoose = require('mongoose');
 var loginController = require('./controllers/login.controller');
 var receptionController = require('./controllers/reception.controller');
+var cors = require('cors');
+
+app.use(cors());
 
 mongoose.connect(config.getDBConnectionString());
 

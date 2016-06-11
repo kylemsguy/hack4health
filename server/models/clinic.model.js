@@ -5,15 +5,7 @@ var clinicSchema = new Schema({
    clinicName: String,
    locationLong: Number,
    locationLat: Number,
-   patients: [
-   	{
-   		email: String,
-   		checkedIn: Boolean,
-   		month: Number,
-   		day: Number,
-   		time: Number
-   	}
-   ]
+   patients: [Number]
 });
 var Clinic = mongoose.model("Clinic", clinicSchema);
 
