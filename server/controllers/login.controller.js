@@ -51,10 +51,10 @@ module.exports = function(app) {
 	            appid: newAppid,
 	            email: req.body.email,
 	            clinicName: req.body.clinicName,
-	            doctorName: req.body.doctorName,
+	            doctorName: req.body.doctorName || "Mrs. Li",
 	            checkedIn: false,
 	            distance: 0,
-	            time: req.body.month,
+	            month: req.body.month,
 	            day: req.body.day,
 	            time: req.body.time
 	        });

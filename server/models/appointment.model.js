@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var appSchema = new Schema({
+   ended: Boolean,
    appid: Number,
    email: String,
    clinicName: String,

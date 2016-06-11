@@ -21,6 +21,12 @@ module.exports = function(app) {
             
             Appointment.find({'appid': { $in: clinic.patients}}, function(err, docs){
                 if (err) throw err;
+                var sendStuff = [];
+                docs.forEach(function(doc){
+                    if (doc.ended==true){
+                        sendStuff.push(doc);
+                    }
+                });
                 
                 res.send(docs);
             });
@@ -55,6 +61,11 @@ module.exports = function(app) {
         
             Appointment.findOne({appid: req.body.appid}, function(err, appDetails){
                 if(err)throw err;
+                
+                appDetails.ended = true;
+                appDetails.save(function(err){
+                   if (err) throw err; 
+                });
                 
                 User.findOne({email: appDetails.email}, function(err, userData){
                     if(err)throw err;
