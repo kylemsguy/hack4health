@@ -2,8 +2,12 @@
 <h3>Login</h3>
 <form ng-submit="login.submit()">
 <div class="form-group">
-  <label for="email">Email: </label>
-  <input type="email" id="email" class="form-control" placeholder="Email">
+  <label>Clinic name:</label>
+  <div ng-repeat="clinicName in login.clinicNames">
+  <label>
+    <input type="radio" value="{{clinicName}}" ng-model="login.loginData.clinicName">{{clinicName}}
+  </label>
+  </div>
 </div>
 <div class="form-group">
   <label for="password">Password: </label>
