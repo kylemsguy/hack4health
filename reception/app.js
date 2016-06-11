@@ -48,6 +48,15 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 		});
 		app.checkedIn = true;
 	};
+	self.endApp = function(app) {
+		$http.post(BACKEND_URL + "/endApp", {
+			clinicName: self.clinicName,
+			appid: app.appid
+		});
+		console.log(app);
+		var index = $scope.activeAppointments.indexOf(app);
+		$scope.activeAppointments.splice(index, 1);
+	};
 	self.refresh();
 	var timer = AUTO_REFRESH? setInterval(function() {
 		self.refresh();
@@ -58,7 +67,35 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 		}
 	});
 })
-.controller("CreateAppointmentController", function() {
+.controller("CreateAppointmentController", function($scope, $http, $cookies, $location) {
+	$scope.email = "";
+	$scope.doctorName = "";
+	$scope.appointmentDate = new Date();
+	$scope.time = "9";
+	function parseTime(s) {
+		if (s.indexOf(":") == -1) return parseInt(s);
+		var a = s.split(":");
+		return parseInt(a[0]) + (parseInt(a[1])/60);
+	}
+	$scope.submitAppointment = function() {
+		$http.post(BACKEND_URL + "/newAppointment", {
+			email: $scope.email,
+			clinicName: $cookies.get("clinicName"),
+			doctorName: $scope.doctorName,
+			month: $scope.appointmentDate.getMonth() + 1,
+			day: $scope.appointmentDate.getDate(),
+			year: $scope.appointmentDate.getFullYear(),
+			time: parseTime($scope.time)
+		}).then(function(response) {
+			alert("Appointment saved.");
+		}, function(error) {
+			console.log(error);
+			alert("Unable to save appointment.");
+		});
+	};
+	$scope.goBack = function() {
+		$location.path("/appointments");
+	};
 })
 .config(function($routeProvider) {
 	$routeProvider
