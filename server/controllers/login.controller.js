@@ -1,4 +1,6 @@
-var User = require('../models/User.model');
+var User = require('../models/user.model');
+var Appointment = require('../models/appointment.model');
+var Clinic = require('../models/clinic.model');
 var bodyParser = require('body-parser');
 
 
@@ -10,14 +12,14 @@ module.exports = function(app) {
     app.post('/signup', function(req, res){
         //save info from form to database
         try {
-            User.find({username: req.body.username}, function(err, existingProf){
+            User.find({email: req.body.email}, function(err, existingProf){
 	            if (err) {
 	                throw err;
 	            } else if (existingProf.length === 0) { //if username doesn't exist, create new profile
-	                console.log(req.body.username + ' ' + req.body.locationLong +' '+ req.body.locationLat);
+	                console.log(req.body.email + ' ' + req.body.locationLong +' '+ req.body.locationLat);
 	            
 	                var newUser = User ({
-	                    username: req.body.username,
+	                    email: req.body.email,
 	                    appointments: [],
 	                    locationLong: req.body.locationLong || 0,
 	                    locationLat: req.body.locationLat || 0
@@ -35,34 +37,66 @@ module.exports = function(app) {
         }
     });
 
- // var newUser = User ({
- //                        username: req.body.username,
- //                        email: req.body.email,
- //                        password: req.body.password,
- //                        friends: [],
- //                        messages: []
- //                    });
-            
- //                    newUser.save(function(err){
- //                        if (err) throw err;
- //                        res.end("success");
-
-
-
-	app.post('/makeappointment', function(req, res){
-		User.find({username: req.body.username}, function)
+    //receive email & appointment info(clinicName, doctorName, time, username)
+	app.post('/newAppointment', function(req, res){
+	    //make new appointment
+	    var newAppid;
+	    Appointment.find({}, function(err, appointments){
+	        if (err) throw err;
+	        console.log(appointments.length);
+	        newAppid = appointments.length + 1;
+	        
+	        var newAppointment = Appointment ({
+	            appid: newAppid,
+	            email: req.body.email,
+	            clinicName: req.body.clinicName,
+	            doctorName: req.body.doctorName,
+	            checkedIn: false,
+	            distance: 0,
+	            time: req.body.time
+	        });
+	    
+	        newAppointment.save(function(err){
+    	        if (err) throw err;
+	            res.send("successfully booked an appointment");
+	        });    
+	    });
+	    
+	    //update user info
+		User.findOne({email: req.body.email}, function(err, user){
+		    if (err) throw err;
+		    user.appointments.push(newAppid);
+		    user.save(function(err){
+		        if (err) throw err;
+		        console.log("successfully updated all this new appointment shit");
+		    });
+		    console.log(user);
+		    
+		});
 	});
 
-	app.post('/makeClinic', function(req, res){
 
-	})
+    //make a new clinic
+	app.post('/makeClinic', function(req, res){
+        var newClinic = Clinic ({
+            clinicName: req.body.clinicName,
+            locationLong: req.body.long,
+            locationLat: req.body.lat,
+            patients: []
+        });
+        
+        newClinic.save(function(err){
+            if (err) throw err;
+            console.log("successfully made new clinic");
+        })
+	});
 
 
     
     
     app.post('/location', function(req, res){
-        var query = {username: req.body.username};
-        console.log(req.body.username + ' ' + req.body.long);
+        var query = {email: req.body.email};
+        console.log(req.body.email + ' ' + req.body.long);
         
         User.findOneAndUpdate(query, {$set:{locationLong: req.body.long, locationLat: req.body.lat}}, {new: true}, function(err, data){
             if (err) throw err;

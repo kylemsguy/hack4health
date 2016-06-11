@@ -3,12 +3,12 @@ var Schema = mongoose.Schema;
 
 var appSchema = new Schema({
    appid: Number,
-   username: String,
+   email: String,
    clinicName: String,
    doctorName: String,
    checkedIn: Boolean,
    distance: Number,
-   time: Number
+   time: Date
 });
 var Appointment = mongoose.model("Appointment", appSchema);
 

@@ -8,7 +8,7 @@ var clinicSchema = new Schema({
    patients: [
    	{
    		username: String,
-   		time: Number
+   		time: Date
    	}
    ]
 });
