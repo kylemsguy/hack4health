@@ -2,13 +2,16 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var clinicSchema = new Schema({
-   clnicName: String,
+   clinicName: String,
    locationLong: Number,
    locationLat: Number,
    patients: [
    	{
-   		username: String,
-   		time: Date
+   		email: String,
+   		checkedIn: Boolean,
+   		month: Number,
+   		day: Number,
+   		time: Number
    	}
    ]
 });

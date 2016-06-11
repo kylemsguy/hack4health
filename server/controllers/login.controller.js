@@ -9,6 +9,7 @@ module.exports = function(app) {
     app.use(bodyParser.json());
     
     
+    
     app.post('/signup', function(req, res){
         //save info from form to database
         try {
@@ -53,6 +54,8 @@ module.exports = function(app) {
 	            doctorName: req.body.doctorName,
 	            checkedIn: false,
 	            distance: 0,
+	            time: req.body.month,
+	            day: req.body.day,
 	            time: req.body.time
 	        });
 	    
@@ -68,16 +71,32 @@ module.exports = function(app) {
 		    user.appointments.push(newAppid);
 		    user.save(function(err){
 		        if (err) throw err;
-		        console.log("successfully updated all this new appointment shit");
 		    });
 		    console.log(user);
 		    
+		});
+		
+		Clinic.findOne({clinicName: req.body.clinicName}, function(err, clinic){
+			if (err) throw err;
+			console.log(clinic);
+			clinic.patients.push({
+				email: req.body.email,
+				checkedIn: false,
+				month: req.body.month,
+				day: req.body.day,
+				time: req.body.time
+			});
+			clinic.save(function(err){
+				if (err) throw err;
+				console.log("Yayy finished making new appointment");
+			});
 		});
 	});
 
 
     //make a new clinic
 	app.post('/makeClinic', function(req, res){
+	    console.log(req.body.clinicName);
         var newClinic = Clinic ({
             clinicName: req.body.clinicName,
             locationLong: req.body.long,
@@ -87,8 +106,9 @@ module.exports = function(app) {
         
         newClinic.save(function(err){
             if (err) throw err;
+            res.end("successfully made new clinic");
             console.log("successfully made new clinic");
-        })
+        });
 	});
 
 

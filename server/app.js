@@ -3,18 +3,17 @@ var app = express();
 var config = require('./config/index');
 var mongoose = require('mongoose');
 var loginController = require('./controllers/login.controller');
+var receptionController = require('./controllers/reception.controller');
 
 mongoose.connect(config.getDBConnectionString());
 
-var bodyParser = require('body-parser');
-//var config = require('./config/index');
-var mongoose = require('mongoose');
 
 app.get('/', function(req, res){
    res.send("testing");
 });
 
 loginController(app);
+receptionController(app);
 
 process.env.PORT = process.env.PORT || 80;
 

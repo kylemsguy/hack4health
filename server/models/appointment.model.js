@@ -8,8 +8,11 @@ var appSchema = new Schema({
    doctorName: String,
    checkedIn: Boolean,
    distance: Number,
-   time: Date
+   month: Number,
+   day: Number,
+   time: Number
 });
+
 var Appointment = mongoose.model("Appointment", appSchema);
 
 module.exports = Appointment;
