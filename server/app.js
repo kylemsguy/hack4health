@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 //var config = require('./config/index');
 var mongoose = require('mongoose');
 
-app.get('/', function(req, res){
+app.get            ('/', function(req, res){
    res.send("testing");
 });
 
