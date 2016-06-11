@@ -13,12 +13,15 @@ import android.os.PowerManager;
 import android.util.Log;
 
 public class LocationService extends IntentService {
+    public static final String EMAIL_
+    private ApiWrapper apiWrapper;
     /**
      * A constructor is required, and must call the super IntentService(String)
      * constructor with a name for the worker thread.
      */
     public LocationService() {
         super("LocationService");
+        apiWrapper = ApiWrapper.getInstance();
     }
 
     /**
@@ -30,8 +33,9 @@ public class LocationService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         // Normally we would do some work here, like download a file.
         // For our sample, we just sleep for 5 seconds.
+        Bundle bundle = intent.getStringExtra()
         try {
-            Thread.sleep(5000);
+            apiWrapper.sendLocationToServer()
         } catch (InterruptedException e) {
             // Restore interrupt status.
             Thread.currentThread().interrupt();
