@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    private String loginEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +193,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    private void startMainActivity(List<LoginResponse> appointments){
+        // TODO start main activity
+        Bundle bundle = new Bundle();
+        bundle.putString(mEmailView.getText().toString());
+        finish();
+    }
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
@@ -294,46 +304,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, List<LoginResponse>> {
 
         private final String mEmail;
         private final String mPassword;
+        private final ApiWrapper apiWrapper;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+            apiWrapper = ApiWrapper.getInstance();
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
+        protected List<LoginResponse> doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                return apiWrapper.login(mEmail, mPassword);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(final List<LoginResponse> success) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finish();
+            if (success != null) {
+                loginEmail = mEmail;
+                startMainActivity(success);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

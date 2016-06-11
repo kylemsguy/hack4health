@@ -1,5 +1,7 @@
 package com.kylemsguy.hack4health;
 
+import android.location.Location;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -22,6 +24,7 @@ import okhttp3.Response;
 public class ApiWrapper {
     public static final String BASE = "";
     public static final String LOGIN = BASE + "login/";
+    public static final String LOCATION = BASE + "location/";
     public static final MediaType MEDIA_TYPE_JSON
             = MediaType.parse("application/json; charset=utf-8");
 
@@ -69,5 +72,25 @@ public class ApiWrapper {
         Gson gson = new Gson();
         Type collectionType = new TypeToken<List<LoginResponse>>(){}.getType();
         return gson.fromJson(json, collectionType);
+    }
+
+    public String sendLocationToServer(String email, Location location) throws IOException{
+        JsonObject json = new JsonObject();
+        json.addProperty("email", email);
+        json.addProperty("lat", location.getLatitude());
+        json.addProperty("long", location.getLongitude());
+
+        Request request = new Request.Builder()
+                .url(LOCATION)
+                .post(RequestBody.create(MEDIA_TYPE_JSON, json.toString()))
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        if(!response.isSuccessful()){
+            throw new IOException("Unexpected code " + response);
+        }
+
+        return response.body().string();
     }
 }
