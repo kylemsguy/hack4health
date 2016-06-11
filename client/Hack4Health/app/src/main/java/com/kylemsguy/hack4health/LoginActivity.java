@@ -3,6 +3,7 @@ package com.kylemsguy.hack4health;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -196,7 +197,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void startMainActivity(List<LoginResponse> appointments){
         // TODO start main activity
         Bundle bundle = new Bundle();
-        bundle.putString(mEmailView.getText().toString());
+        bundle.putString("email", mEmailView.getText().toString());
         finish();
     }
 

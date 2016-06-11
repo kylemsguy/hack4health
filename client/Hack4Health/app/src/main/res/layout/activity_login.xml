@@ -30,6 +30,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <ImageView
+                android:src="@drawable/stopwatch"
+                android:layout_width="match_parent"
+                android:layout_height="150dp" />
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
