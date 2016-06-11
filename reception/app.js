@@ -1,4 +1,5 @@
 var BACKEND_URL="https://hack4health-cherylyli.c9users.io";
+var AUTO_REFRESH = false;
 angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 .controller("LoginController", function($rootScope, $location, $cookies) {
 	var login = this;
@@ -9,9 +10,9 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 	login.clinicNames = ["Markham Family Health Team", "Test 2"];
 	login.loginData = {clinicName: $cookies.get("clinicName")? $cookies.get("clinicName"): login.clinicNames[0]};
 })
-.controller("AppointmentsController", function($rootScope, $location, $http, $cookies) {
+.controller("AppointmentsController", function($scope, $rootScope, $location, $http, $cookies) {
 	var self = this;
-	self.activeAppointments = [];
+	$scope.activeAppointments = [];
 	self.clinicName = $cookies.get("clinicName");
 	self.date = new Date();
 	self.refresh = function() {
@@ -25,9 +26,10 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 			day: 12//self.date.getDate()
 		})
 		.then(function(response) {
-			console.log(response);
-			self.activeAppointments = response.data;
+			$scope.activeAppointments = response.data;
 		}, function(error) {
+			console.log(error);
+			alert("Failed to load data: please refresh the page");
 		})
 	}
 	self.formatTime = function(time) {
@@ -39,7 +41,22 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 		}
 		return firstPart + ":" + minutes;
 	}
+	self.checkIn = function(app) {
+		$http.post(BACKEND_URL + "/checkIn", {
+			clinicName: self.clinicName,
+			appid: app.appid
+		});
+		app.checkedIn = true;
+	};
 	self.refresh();
+	var timer = AUTO_REFRESH? setInterval(function() {
+		self.refresh();
+	}, 10000): undefined;
+	$scope.$on("$destroy", function() {
+		if (timer) {
+			clearTimeout(timer);
+		}
+	});
 })
 .controller("CreateAppointmentController", function() {
 })
