@@ -22,7 +22,7 @@ import okhttp3.Response;
  * Created by kyle on 11/06/16.
  */
 public class ApiWrapper {
-    public static final String BASE = "";
+    public static final String BASE = "https://hack4health-cherylyli.c9users.io/";
     public static final String LOGIN = BASE + "login/";
     public static final String LOCATION = BASE + "location/";
     public static final MediaType MEDIA_TYPE_JSON
@@ -68,10 +68,11 @@ public class ApiWrapper {
         }
 
         String responseStr = response.body().string();
+        System.out.println(responseStr);
 
         Gson gson = new Gson();
         Type collectionType = new TypeToken<List<LoginResponse>>(){}.getType();
-        return gson.fromJson(json, collectionType);
+        return gson.fromJson(responseStr, collectionType);
     }
 
     public String sendLocationToServer(String email, Location location) throws IOException{
