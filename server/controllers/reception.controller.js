@@ -109,6 +109,7 @@ module.exports = function(app) {
     });
     
     
+    //spits out all appointments
     app.post('/allappointments', function(req, res){
         Appointment.find({}, function(err, data){
             if (err) throw err;
