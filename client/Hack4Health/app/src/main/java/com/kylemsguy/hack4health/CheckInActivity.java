@@ -86,6 +86,10 @@ public class CheckInActivity extends AppCompatActivity {
     }
 
     public void checkIn(View v){
+        if(distance > 3) {
+            showDialogBox("You need to be within 3km of the clinic to check in.");
+            return;
+        }
         new AsyncTask<Void, Void, Boolean>(){
             @Override
             protected Boolean doInBackground(Void... params) {

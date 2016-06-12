@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#545e73</color>
     <color name="colorAccent">#FF4081</color>
     <color name="missedAppt">#F1D1C1</color>
-    <color name="normalAppt">#90ee90</color>
+    <color name="normalAppt">#b8ee7f</color>
     <color name="notReady">#FFFFE5</color>
+    <color name="checkedin">#E0E0E0</color>
 </resources>
