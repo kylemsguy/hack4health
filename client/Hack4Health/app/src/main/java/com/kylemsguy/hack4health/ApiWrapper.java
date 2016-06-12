@@ -4,11 +4,17 @@ import android.location.Location;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -70,9 +76,17 @@ public class ApiWrapper {
         String responseStr = response.body().string();
         System.out.println(responseStr);
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+                    @Override
+                    public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                        return new Date(json.getAsJsonPrimitive().getAsLong());
+                    }
+                })
+                .create();
         Type collectionType = new TypeToken<List<LoginResponse>>(){}.getType();
-        return gson.fromJson(responseStr, collectionType);
+        List<LoginResponse> deserialResponse = gson.fromJson(responseStr, collectionType);
+        return deserialResponse;
     }
 
     public String sendLocationToServer(String email, Location location) throws IOException{
