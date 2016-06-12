@@ -108,7 +108,16 @@ module.exports = function(app) {
        
     });
     
+    
+    app.post('/allappointments', function(req, res){
+        Appointment.find({}, function(err, data){
+            if (err) throw err;
+            res.send(data);
+        });
+    });
 };
+
+
 
 
 //takes the docs and sort them according to time
