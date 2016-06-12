@@ -102,15 +102,15 @@ function messageLoop() {
 			console.log(err);
 			return;
 		}
-		console.log(response);
+		//console.log(response);
 		var allAppointments = response.filter(function(a) {
 			if (a.ended || a.checkedIn) return false;
-			console.log(dateForAppointment(a));
+			//console.log(dateForAppointment(a));
 			var theTime = dateForAppointment(a).getTime();
-			console.log(a);
+			//console.log(a);
 			var inRange = (theTime >= new Date().getTime() + upperAppointmentBound) &&
 				(theTime <= new Date().getTime() + lowerAppointmentBound);
-			console.log(inRange + ":" + theTime + ":" + (new Date().getTime() + upperAppointmentBound) + ":" + (new Date().getTime() + lowerAppointmentBound));
+			//console.log(inRange + ":" + theTime + ":" + (new Date().getTime() + upperAppointmentBound) + ":" + (new Date().getTime() + lowerAppointmentBound));
 			return inRange;
 		});
 		console.log(allAppointments);
