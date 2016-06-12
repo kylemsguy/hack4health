@@ -31,7 +31,17 @@
         android:visibility="gone" />
 
     <TextView
+        android:text="Estimated Wait Time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_alignBottom="@+id/timeToAppt"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textView2" />
+
+    <TextView
         android:id="@+id/timeToAppt"
+        android:textSize="36sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/clinicName"
@@ -39,22 +49,35 @@
         android:layout_marginTop="107dp"
         android:text="TimeToAppt" />
 
-    <TextView
-        android:id="@+id/distanceToAppt"
+    <LinearLayout
+        android:id="@+id/distanceToApptLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/timeToAppt"
+        android:orientation="vertical"
+        android:layout_above="@+id/btnCheckIn"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="101dp"
-        android:text="DistanceToAppt" />
+        android:layout_marginBottom="70dp">
+        <TextView
+            android:text="Distance to Clinic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/distanceToAppt"
+            android:textSize="36sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DistanceToAppt" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnCheckIn"
-        android:layout_width="wrap_content"
+        android:textSize="36sp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="checkIn"
+        android:enabled="false"
         android:text="Check In" />
 
 </RelativeLayout>

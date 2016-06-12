@@ -164,7 +164,7 @@ public class ApiWrapper {
         json.addProperty("appid", appid);
 
         Request request = new Request.Builder()
-                .url(LOCATION)
+                .url(CHECK_IN)
                 .post(RequestBody.create(MEDIA_TYPE_JSON, json.toString()))
                 .build();
 

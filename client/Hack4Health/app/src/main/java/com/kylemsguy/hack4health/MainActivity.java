@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnListItemClickAc
         intent.putExtra("appid", myDataset.get(position).getAppid());
         intent.putExtra("checkedin", myDataset.get(position).isCheckedIn());
         intent.putExtra("clinicname", myDataset.get(position).getClinicName());
+        intent.putExtra("timetoappt", myDataset.get(position).getDate().getTime());
 
         startActivity(intent);
     }
