@@ -31,7 +31,7 @@ function formatTime(appointment) {
 	var minutes = (appointment.time - hr) * 60;
 	var minutesPadded = Math.round(minutes.toString());
 	if (minutesPadded.length < 2) minutesPadded = " " + minutesPadded;
-	return hr12 + ":" + minutes + " " + ampm;
+	return hr12 + ":" + minutesPadded + " " + ampm;
 }
 
 function formatDate(appointment) {
@@ -92,7 +92,7 @@ sendEmailForAppointment({
 var upperAppointmentBound = 27*60*60*1000 - (5*60*1000); // 27 hours-5 minutes
 var lowerAppointmentBound = upperAppointmentBound + (10*60*1000); // 27 hours 2 minute
 function dateForAppointment(a) {
-	console.log(a.month -1, a.day, Math.floor(a.time), (a.time-Math.floor(a.time))*60);
+	//console.log(a.month -1, a.day, Math.floor(a.time), (a.time-Math.floor(a.time))*60);
 	return new Date(2016, a.month - 1, a.day, Math.floor(a.time), (a.time - Math.floor(a.time))*60);
 }
 function messageLoop() {
@@ -157,7 +157,7 @@ function messageLoop() {
 	});
 }
 
-setTimeout(messageLoop, 5000); // 5 seconds
+setInterval(messageLoop, 5000); // 5 seconds
 function createTable() {
 	// create the Amazon Dynamo table
 	dynamodb.createTable({
