@@ -1,4 +1,4 @@
-var BACKEND_URL="https://hack4health-cherylyli.c9users.io";
+var BACKEND_URL="http://localhost:8000";
 var request = require("request");
 var AWS = require("aws-sdk");
 
