@@ -7,7 +7,7 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 		$cookies.put("clinicName", login.loginData.clinicName);
 		$location.path("/appointments");
 	}
-	login.clinicNames = ["Markham Family Health Team", "Test 2"];
+	login.clinicNames = ["Markham Family Health Team", "St Michaels Health Centre", "Mt Pleasant Family Practice", "Church Wellesley Medical Clinic"];
 	login.loginData = {clinicName: $cookies.get("clinicName")? $cookies.get("clinicName"): login.clinicNames[0]};
 })
 .controller("AppointmentsController", function($scope, $rootScope, $location, $http, $cookies) {
