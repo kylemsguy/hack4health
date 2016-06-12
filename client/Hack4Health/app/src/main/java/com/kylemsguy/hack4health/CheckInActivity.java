@@ -52,8 +52,8 @@ public class CheckInActivity extends AppCompatActivity {
         distanceToApptLayout = (LinearLayout) findViewById(R.id.distanceToApptLayout);
 
         clinicNameView.setText(clinicName != null ? clinicName : "");
-        timeToApptView.setText("In x min");
-        distanceToApptView.setText("x km away");
+        timeToApptView.setText("Loading...");
+        distanceToApptView.setText("Loading...");
         btnCheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

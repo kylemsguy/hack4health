@@ -72,7 +72,7 @@
 
     <Button
         android:id="@+id/btnCheckIn"
-        android:textSize="36sp"
+        android:textSize="30sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
