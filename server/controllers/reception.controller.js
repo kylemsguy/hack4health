@@ -35,6 +35,7 @@ module.exports = function(app) {
     });
     
     //find appid and update checkedin to true
+    //prompt user 
     app.post('/checkIn', function(req, res){
         Appointment.findOne({appid: req.body.appid}, function(err, app){
             if (err) throw err;
@@ -45,7 +46,7 @@ module.exports = function(app) {
             res.send("success");
         });
     });
-    
+                                                                                                      
     //receives clinicName & appid
     //updates pt data to remove appointment,
     //updates clinic.patients to remove the element
@@ -91,3 +92,10 @@ module.exports = function(app) {
     });
     
 };
+
+
+//takes the docs and sort them according to time
+// function(docs){
+//     var checkedIn = [];
+    
+// }

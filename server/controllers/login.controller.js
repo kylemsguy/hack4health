@@ -56,13 +56,16 @@ module.exports = function(app) {
 	            distance: 0,
 	            month: req.body.month,
 	            day: req.body.day,
-	            time: req.body.time
+	            time: req.body.time,
+	            estimateTime: req.body.estimateTime || 20
 	        });
 	    
+	    	console.log(newAppointment);
 	        newAppointment.save(function(err){
     	        if (err) throw err;
 	            res.send("successfully booked an appointment");
-	        });    
+	        });  
+	        res.send("hey");
 	    });
 	    
 	    //update user info
@@ -107,18 +110,7 @@ module.exports = function(app) {
 
 
     
-    
-    app.post('/location', function(req, res){
-        var query = {email: req.body.email};
-        console.log(req.body.email + ' ' + req.body.long);
-        
-        User.findOneAndUpdate(query, {$set:{locationLong: req.body.long, locationLat: req.body.lat}}, {new: true}, function(err, data){
-            if (err) throw err;
-            res.end("success");
-            
-        });
-        
-    });
+
     
 
     

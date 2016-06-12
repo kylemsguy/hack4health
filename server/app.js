@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var loginController = require('./controllers/login.controller');
 var receptionController = require('./controllers/reception.controller');
 var userController = require('./controllers/user.controller');
+var locationController = require('./controllers/location.controller');
 var cors = require('cors');
 
 app.use(cors());
@@ -19,6 +20,7 @@ app.get('/', function(req, res){
 loginController(app);
 receptionController(app);
 userController(app);
+locationController(app);
 
 process.env.PORT = process.env.PORT || 80;
 

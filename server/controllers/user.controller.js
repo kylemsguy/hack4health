@@ -23,7 +23,7 @@ module.exports = function(app) {
                     var hour = Math.floor(doc.time);
                     var min = (doc.time - hour) * 60;
                     
-                    var date = new Date(2016, doc.month-1, doc.day, hour, min).toString();
+                    var date = new Date(2016, doc.month-1, doc.day, hour, min).getTime().toString();
                     console.log(date);
                     returnObject.push(
                         {

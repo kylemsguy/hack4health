@@ -11,7 +11,8 @@ var appSchema = new Schema({
    distance: Number,
    month: Number,
    day: Number,
-   time: Number
+   time: Number,
+   estimateTime: Number
 });
 
 var Appointment = mongoose.model("Appointment", appSchema);
