@@ -83,7 +83,8 @@
                 android:text="LaunchApptDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="launchappt"/>
+                android:onClick="launchappt"
+                android:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
