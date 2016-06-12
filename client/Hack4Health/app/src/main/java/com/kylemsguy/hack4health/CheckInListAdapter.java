@@ -1,12 +1,14 @@
 package com.kylemsguy.hack4health;
 
+/**
+ * Created by kyle on 11/06/16.
+ */
+
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +17,7 @@ import java.util.List;
 /**
  * Created by kyle on 11/06/16.
  */
-public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHolder> {
+public class CheckInListAdapter extends RecyclerView.Adapter<CheckInListAdapter.ViewHolder> {
     private List<LoginResponse> mDataset;
     private OnListItemClickAction clickAction;
 
@@ -26,7 +28,6 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
         public View v;
         public TextView mClinicName;
         public TextView mApptTime;
-
         public ViewHolder(View v) {
             super(v);
             this.v = v;
@@ -36,15 +37,15 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ApptListAdapter(OnListItemClickAction action, List<LoginResponse> myDataset) {
+    public CheckInListAdapter(OnListItemClickAction action, List<LoginResponse> myDataset) {
         mDataset = myDataset;
         clickAction = action;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public ApptListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+    public CheckInListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                         int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.appt_list_item, parent, false);
@@ -55,19 +56,19 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         //holder.mTextView.setText(mDataset[position]);
         holder.mClinicName.setText(mDataset.get(position).getClinicName());
         Date date = mDataset.get(position).getDate();
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ hh:mma");
-        holder.mApptTime.setText(sdf.format(date).toString());
+        holder.mApptTime.setText(sdf.format(date));
         holder.v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // get the onclick listener
-                clickAction.doAction(v, holder.getAdapterPosition());
+                clickAction.doAction(v, position);
             }
         });
     }

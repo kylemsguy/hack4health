@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
 
     private String loginEmail;
+    private String loginPassword;
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -222,6 +223,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         Intent mainIntent = new Intent(this, MainActivity.class);
         mainIntent.putExtra("email", loginEmail);
+        mainIntent.putExtra("pass", loginPassword);
 
         startActivity(mainIntent);
 
@@ -363,6 +365,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success != null) {
                 loginEmail = mEmail;
+                loginPassword = mPassword;
                 startMainActivity(success);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

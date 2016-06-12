@@ -31,6 +31,8 @@ public class ApiWrapper {
     public static final String BASE = "https://hack4health-cherylyli.c9users.io/";
     public static final String LOGIN = BASE + "login/";
     public static final String LOCATION = BASE + "location/";
+    public static final String APP_DETAIL = BASE + "appdetail/";
+    public static final String CHECK_IN = BASE + "checkin/";
     public static final MediaType MEDIA_TYPE_JSON
             = MediaType.parse("application/json; charset=utf-8");
 
@@ -110,4 +112,5 @@ public class ApiWrapper {
 
         return response.body().string();
     }
+
 }

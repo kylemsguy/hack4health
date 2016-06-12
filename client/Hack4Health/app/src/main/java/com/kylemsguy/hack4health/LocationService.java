@@ -59,8 +59,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setFastestInterval(30000)
-                .setInterval(120000);
+                .setFastestInterval(30000) // 30 seconds
+                .setInterval(120000); // 2 minutes
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
