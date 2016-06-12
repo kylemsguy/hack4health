@@ -29,7 +29,7 @@ import okhttp3.Response;
  * Created by kyle on 11/06/16.
  */
 public class ApiWrapper {
-    public static final String BASE = "https://ec2-54-201-47-78.us-west-2.compute.amazonaws.com/";
+    public static final String BASE = "https://hack4health-cherylyli.c9users.io/";
     public static final String LOGIN = BASE + "login/";
     public static final String LOCATION = BASE + "location/";
     public static final String APP_DETAIL = BASE + "appdetail/";
