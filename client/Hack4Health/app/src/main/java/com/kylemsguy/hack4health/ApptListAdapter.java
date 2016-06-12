@@ -30,12 +30,14 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
         public View v;
         public TextView mClinicName;
         public TextView mApptTime;
+        public TextView mCheckedInTag;
 
         public ViewHolder(View v) {
             super(v);
             this.v = v;
             this.mClinicName = (TextView) v.findViewById(R.id.clinicName);
             this.mApptTime = (TextView) v.findViewById(R.id.apptTime);
+            this.mCheckedInTag = (TextView) v.findViewById(R.id.checkedInTag);
         }
     }
 
@@ -65,6 +67,7 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
         // - replace the contents of the view with that element
         //holder.mTextView.setText(mDataset[position]);
         holder.v.setEnabled(true);
+        holder.mCheckedInTag.setVisibility(View.GONE);
         holder.mClinicName.setText(mDataset.get(position).getClinicName());
         final Date date = mDataset.get(position).getDate();
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ hh:mma");
@@ -73,8 +76,12 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
 
         Date currDate = new Date();
 
+        boolean checkedIn = mDataset.get(position).isCheckedIn();
         long diff = date.getTime() - currDate.getTime();
-        if(diff > 1800000){ // 30min
+
+        if(checkedIn) {
+            holder.mCheckedInTag.setVisibility(View.VISIBLE);
+        } else if(diff > 1800000){ // 30min
             // change colour
             holder.v.setBackgroundColor(mContext.getResources().getColor(R.color.notReady));
         } else if(diff < 0) { // past
