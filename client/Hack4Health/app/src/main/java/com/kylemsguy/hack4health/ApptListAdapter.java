@@ -33,6 +33,11 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
         }
     }
 
+    // Provide a method to call for each click
+    public interface onItemClickAction {
+        void onClick(View v, int position);
+    }
+
     // Provide a suitable constructor (depends on the kind of dataset)
     public ApptListAdapter(List<LoginResponse> myDataset) {
         mDataset = myDataset;
@@ -60,6 +65,13 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
         Date date = mDataset.get(position).getDate();
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ hh:mma")
         holder.mApptTime.setText(sdf.toString());
+        holder.v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get the onclick listener
+
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
