@@ -46,8 +46,9 @@ module.exports = function(app) {
                             //res.send(oneApp.distance);
                             oneApp.save(function(err){
                                 if (err) throw err; 
+                                //res.send("success");
                             });
-                        res.send("success");
+                        
                         });
                     } 
                 });

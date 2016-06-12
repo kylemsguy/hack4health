@@ -11,6 +11,7 @@ module.exports = function(app) {
     //receive email
     //give back lots of shit
     app.post('/login', function(req, res){
+        console.log("received request for login");
         User.findOne({email: req.body.email}, function(err, userData){
             if (err) throw err;
             console.log(userData);
@@ -49,8 +50,10 @@ module.exports = function(app) {
     //whether or not you've checked in, clinicInfo: how many pt before you, average time to intake(add all pt time before you),
     //and how far away you are from app
     app.post('/appdetail', function(req, res){
+        console.log("request to appdetail");
         Appointment.findOne({appid: req.body.appid}, function(err, appdetail){
             if (err) throw err;
+
             Clinic.findOne({clinicName: appdetail.clinicName}, function(err, clinicInfo){
                 if (err) throw err;
                 Appointment.find({'appid': { $in: clinicInfo.patients}}, function(err, docs){
@@ -82,7 +85,8 @@ module.exports = function(app) {
                             console.log("estimated time: " + time);
                             res.send({
                                 time: time || 60,
-                                checkedIn: appdetail.checkedIn
+                                checkedIn: appdetail.checkedIn,
+                                distance: appdetail.distance
                             });
                             
                         });
@@ -93,7 +97,8 @@ module.exports = function(app) {
                     else {
                         res.send({
                            time: 0,
-                           checkedIn: appdetail.checkedIn
+                           checkedIn: appdetail.checkedIn,
+                           distance: appdetail.distance
                         });
                     }
                     

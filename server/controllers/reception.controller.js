@@ -12,7 +12,7 @@ module.exports = function(app) {
     //receive clinicName
     //send sorted list of appid, checkedIn, name, etc
     app.post('/clinicLogin', function(req, res){
-        console.log(req.body.clinicName);
+        console.log("sending request to clinicLogin");
         Clinic.findOne({clinicName: req.body.clinicName}, function(err, clinic){
             if (err) throw err;
             var appDetailList = [];
@@ -103,6 +103,7 @@ module.exports = function(app) {
     
     //spits out all appointments that are not cancelled
     app.post('/allappointments', function(req, res){
+        console.log("request to get all appointments");
         Appointment.find({}, function(err, data){
             if (err) throw err;
             res.send(data);

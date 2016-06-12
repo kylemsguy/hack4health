@@ -41,6 +41,7 @@ module.exports = function(app) {
     //receive email & appointment info(clinicName, doctorName, time, username)
 	app.post('/newAppointment', function(req, res){
 	    //make new appointment
+	    console.log("got request to add new appointment");
 	    var newAppid;
 	    Appointment.find({}, function(err, appointments){
 	        if (err) throw err;
