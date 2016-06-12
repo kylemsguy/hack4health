@@ -1,0 +1,12 @@
+<h3>Appointments for {{appointments.clinicName}}</h3>
+<div class="col-md-8">
+<div ng-repeat="appointment in activeAppointments" class="appointment-entry">
+  <div>{{appointment.email}} at {{appointments.formatTime(appointment.time)}}</div>
+  <!--<div>{{appointment.distance}} away</div>-->
+  <div>
+    <button class="btn btn-primary" ng-hide="appointment.checkedIn" ng-click="appointments.checkIn(appointment)">Check in</button>
+    <button class="btn btn-primary" ng-hide="!appointment.checkedIn" ng-click="appointments.endApp(appointment)">End appointment</button>
+  </div>
+</div>
+<a href="#/createappointment" class="btn">New appointment</a>
+</div>
