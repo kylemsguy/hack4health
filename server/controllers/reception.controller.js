@@ -43,8 +43,24 @@ module.exports = function(app) {
             app.checkedIn = true;
             app.save(function(err){
                 if (err) throw err;
+                console.log("I saved my app checkin");
             });
-            res.send("success");
+            //update the clinic's patient's list
+            //get the clinic name
+            Clinic.findOne({clinicName: app.clinicName}, function(err, clinic){
+                if (err) throw err;
+                var appList = clinic.patients;
+                console.log("patient list: " + clinic.patients);
+                Appointment.find({'appid': { $in: clinic.patients}}, function(err, appList){
+                    if (err) throw err;
+                    console.log(appList);
+                    sortedDocs(appList);
+                    res.send(appList);
+                });
+            });
+            
+            
+            //res.send("success");
         });
     });
                                                                                                       
@@ -107,39 +123,28 @@ function sortedDocs(docs){
             notCheckedIn.push(doc);
         }
     });
-    
-    checkedIn.sort(function(a,b){
-        if (a.time < b.time){
-            return -1;
-        } else if (a.time > b.time) {
-            return 1;
-        } else {
-            return 0;
-        }
+    sortList(checkedIn);
+    sortList(notCheckedIn);
+
+    notCheckedIn.forEach(function(app){
+      checkedIn.push(app);
     });
     
-     notCheckedIn.sort(function(a,b){
-        if (a.time < b.time){
-            return -1;
-        } else if (a.time > b.time) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
-    
-    
-    var returnedStuff = checkedIn.concat(notCheckedIn);
-    return returnedStuff;
-    
-    
-        
-   
-    
-    //return stuff;
+    return checkedIn;
 }
 
-//docs.sort
+function sortList(list){
+  list.sort(function(a, b){
+    if (a.time < b.time){
+            return -1;
+        } else if (a.time > b.time) {
+            return 1;
+        } else {
+            return 0;
+        }
+  });
+}
+    
 
 
 

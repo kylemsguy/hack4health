@@ -45,10 +45,67 @@ module.exports = function(app) {
     });
     
     
+    //receive appid, give back lots of stuff
+    //whether or not you've checked in, clinicInfo: how many pt before you, average time to intake(add all pt time before you),
+    //and how far away you are from app
+    app.post('/appdetail', function(req, res){
+        Appointment.findOne({appid: req.body.appid}, function(err, appdetail){
+            if (err) throw err;
+            Clinic.findOne({clinicName: appdetail.clinicName}, function(err, clinicInfo){
+                if (err) throw err;
+                Appointment.find({'appid': { $in: clinicInfo.patients}}, function(err, docs){
+                    if (err) throw err;
+                    var sortedList = sortedDocs(docs);
+                    //res.send(sortedList);
+                    var listOfAppids = [];
+                    sortedList.forEach(function(doc){
+                        listOfAppids.push(doc.appid); 
+                    });
+                    
+                    //save new pt list for clinic
+                    clinicInfo.patients = listOfAppids;
+                    clinicInfo.save(function(err){
+                        if(err) throw err;
+                    });
+                    
+                    //tell pt how many patients in front of him/her
+                    //get sublist of ppl in front of you and add their approx time
+                    var index = listOfAppids.indexOf(appdetail.appid);
+                    var time = 0;
+                    if (index > 0){
+                        var patientsBefore = listOfAppids.slice(0, index);
+                        Appointment.find({'appid': { $in: patientsBefore}}, function(err, appointmentList){
+                            if (err) throw err;
+                            appointmentList.forEach(function(objectAppt){
+                                time = objectAppt.estimateTime + time; 
+                            });
+                            console.log("estimated time: " + time);
+                            res.send({
+                                time: time,
+                                checkedIn: appdetail.checkedIn
+                            });
+                            
+                        });
+                        
+                        console.log(patientsBefore);
+                        
+                    }
+                    
+                    //console.log(index);
+                    
+                    //res.send(listOfAppids);
+                });
+                //res.send(clinicInfo); 
+            });
+            console.log(appdetail); 
+            //res.send("hey beautiful");
+        });
+    });
+    
+    
 };
 
-//takes the docs and sort them according to time
-//put the time into two groups, one checked in and one not checked in
+//sort stuff
 function sortedDocs(docs){
     var checkedIn = [];
     var notCheckedIn = [];
@@ -59,34 +116,25 @@ function sortedDocs(docs){
             notCheckedIn.push(doc);
         }
     });
-    
-    checkedIn.sort(function(a,b){
-        if (a.time < b.time){
-            return -1;
-        } else if (a.time > b.time) {
-            return 1;
-        } else {
-            return 0;
-        }
+    sortList(checkedIn);
+    sortList(notCheckedIn);
+
+    notCheckedIn.forEach(function(app){
+      checkedIn.push(app);
     });
     
-     notCheckedIn.sort(function(a,b){
-        if (a.time < b.time){
-            return -1;
-        } else if (a.time > b.time) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
-    
-    
-    var returnedStuff = checkedIn.concat(notCheckedIn);
-    return returnedStuff;
-    
-    
-        
-   
-    
-    //return stuff;
+    return checkedIn;
 }
+
+function sortList(list){
+  list.sort(function(a, b){
+    if (a.time < b.time){
+            return -1;
+        } else if (a.time > b.time) {
+            return 1;
+        } else {
+            return 0;
+        }
+  });
+}
+    
