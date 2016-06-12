@@ -1,0 +1,27 @@
+<div class="col-md-4">
+<h3>Create appointment</h3>
+<form ng-submit="submitAppointment()">
+<div class="form-group">
+  <label for="email">Email: </label>
+  <input type="email" id="email" class="form-control" placeholder="Email" ng-model="email">
+</div>
+<!--<div class="form-group">
+  <label for="doctorname">Doctor name: </label>
+  <input id="doctorname" class="form-control" ng-model="doctorName">
+</div>-->
+<div class="form-group">
+  <label for="appDate">Date: </label>
+  <input id="appDate" class="form-control" ng-model="appointmentDate" type="date">
+</div>
+<div class="form-group">
+  <label for="time">Time: </label>
+  <input id="time" class="form-control" ng-model="time">
+</div>
+<div class="form-group">
+  <label for="estimatedLength">Approx duration:</label>
+  <input id="estimatedLength" class="form-control" ng-model="estimateTime" type="number">
+</div>
+<input type="submit" class="btn btn-primary" value="Create">
+</form>
+<button class="btn" ng-click="goBack()">Back</button>
+</div>
