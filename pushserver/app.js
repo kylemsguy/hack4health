@@ -1,16 +1,13 @@
-var User = require("../server/models/user.model");
-var Appointment = require("../server/models/appointment.model");
-var Clinic = require("../server/models/clinic.model");
-var config = require("../server/config/index");
-var mongoose = require("mongoose");
+var request = require("request");
 var AWS = require("aws-sdk");
 
 AWS.config.update({region: "us-west-2"});
 var ses = new AWS.SES();
-//mongoose.connect(config.getDBConnectionString());
+var dynamodb = new AWS.DynamoDB();
 
 var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug",
 	"Sep", "Oct", "Nov", "Dec"];
+var alreadySent = [];
 function endingForNumber(a) {
 	if (a > 10 && a < 20) return "th";
 	var b = a % 10;
@@ -81,7 +78,7 @@ function sendEmailForAppointment(appointment) {
 		}
 	});
 }
-
+/*
 sendEmailForAppointment({
 	//email: "success@simulator.amazonses.com",
 	email: "docnowreminder@gmail.com",
@@ -90,8 +87,81 @@ sendEmailForAppointment({
 	day: 12,
 	time: 8.5
 });
-
-function messageLoop() {
-	// poll
+*/
+var upperAppointmentBound = 27*60*60*1000; // 27 hours
+var lowerAppointmentBound = upperAppointmentBound + 60000; // 27 hours 1 minute
+function dateForAppointment(a) {
+	return new Date(2016, a.month - 1, a.day, a.time);
 }
-//setInterval(messageLoop, 60000); // 1 minute
+function messageLoop() {
+	// grab all the active appointments
+	request./*post(BACKEND_URL + "/allappointments"*/get({url: "http://localhost:8002/allappointments.json", json: true}, function(err, httprequest, response) {
+		var allAppointments = response.filter(function(a) {
+			if (a.ended || a.checkedIn) return false;
+			var theTime = dateForAppointment(a).getTime();
+			//return (theTime >= new Date().getTime() + upperAppointmentBound) &&
+			//	(theTime <= new Date().getTime() + lowerAppointmentBound);
+			return true;
+		});
+		console.log(allAppointments);
+		if (allAppointments.length == 0) return;
+		// grab all the dynamo events! Theresgottabeabetterway.mp4
+		dynamodb.scan({
+			TableName: "sent_notifications",
+		}, function(err, data) {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			var appointmentsMap = {};
+			for (var i = 0; i < data.Items.length; i++) {
+				appointmentsMap[date.Items[i].Id] = true;
+			}
+			var unnotificated = allAppointments.filter(function(a) {
+				return !appointmentsMap[a.id];
+			});
+			console.log(unnotificated);
+			var writeRequests = [];
+			for (var i = 0; i < unnotificated.length; i++) {
+				writeRequests.push({
+					"PutRequest": {
+						"Key": {
+							"S": unnotificated[i].appid.toString()
+						}
+					}
+				});
+				sendEmailForAppointment(unnotificated[i]);
+			}
+			dynamodb.batchWriteItem({
+				"RequestItems": {
+					"sent_notifications": writeRequests
+				}
+			}, function(err, data) {
+				if (err) {
+					console.log(err);
+				}
+			});
+		});
+	});
+}
+
+setTimeout(messageLoop, 5000); // 5 seconds
+function createTable() {
+	// create the Amazon Dynamo table
+	dynamodb.createTable({
+		TableName: "sent_notifications",
+		KeySchema: [
+			{AttributeName: "Id", KeyType: "HASH"}
+		],
+		AttributeDefinitions: [
+			{AttributeName: "Id", AttributeType: "S"},
+		],
+		ProvisionedThroughput: {
+			ReadCapacityUnits: 1,
+			WriteCapacityUnits: 1
+		}
+	}, function(err, res) {
+		console.log(err, res);
+	});
+}
+//createTable();
