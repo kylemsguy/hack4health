@@ -100,6 +100,11 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 	$scope.goBack = function() {
 		$location.path("/appointments");
 	};
+	$scope.set27hours = function() {
+		$scope.appointmentDate = new Date(Date.now() + 27*60*60*1000);
+		$scope.time = $scope.appointmentDate.getHours() + ":" +
+			$scope.appointmentDate.getMinutes();
+	}
 })
 .config(function($routeProvider) {
 	$routeProvider
