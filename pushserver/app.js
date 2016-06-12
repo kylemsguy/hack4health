@@ -1,3 +1,4 @@
+var BACKEND_URL="https://hack4health-cherylyli.c9users.io";
 var request = require("request");
 var AWS = require("aws-sdk");
 
@@ -28,7 +29,7 @@ function formatTime(appointment) {
 	var hr12 = hr == 12? 12: hr % 12;
 	var ampm = hr < 12? "AM": "PM";
 	var minutes = (appointment.time - hr) * 60;
-	var minutesPadded = minutes.toString();
+	var minutesPadded = Math.round(minutes.toString());
 	if (minutesPadded.length < 2) minutesPadded = " " + minutesPadded;
 	return hr12 + ":" + minutes + " " + ampm;
 }
@@ -88,20 +89,29 @@ sendEmailForAppointment({
 	time: 8.5
 });
 */
-var upperAppointmentBound = 27*60*60*1000; // 27 hours
-var lowerAppointmentBound = upperAppointmentBound + 60000; // 27 hours 1 minute
+var upperAppointmentBound = 27*60*60*1000 - (5*60*1000); // 27 hours-5 minutes
+var lowerAppointmentBound = upperAppointmentBound + (10*60*1000); // 27 hours 2 minute
 function dateForAppointment(a) {
-	return new Date(2016, a.month - 1, a.day, a.time);
+	console.log(a.month -1, a.day, Math.floor(a.time), (a.time-Math.floor(a.time))*60);
+	return new Date(2016, a.month - 1, a.day, Math.floor(a.time), (a.time - Math.floor(a.time))*60);
 }
 function messageLoop() {
 	// grab all the active appointments
-	request./*post(BACKEND_URL + "/allappointments"*/get({url: "http://localhost:8002/allappointments.json", json: true}, function(err, httprequest, response) {
+	request.post({url: BACKEND_URL + "/allappointments", json: true}, function(err, httprequest, response) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		console.log(response);
 		var allAppointments = response.filter(function(a) {
 			if (a.ended || a.checkedIn) return false;
+			console.log(dateForAppointment(a));
 			var theTime = dateForAppointment(a).getTime();
-			//return (theTime >= new Date().getTime() + upperAppointmentBound) &&
-			//	(theTime <= new Date().getTime() + lowerAppointmentBound);
-			return true;
+			console.log(a);
+			var inRange = (theTime >= new Date().getTime() + upperAppointmentBound) &&
+				(theTime <= new Date().getTime() + lowerAppointmentBound);
+			console.log(inRange + ":" + theTime + ":" + (new Date().getTime() + upperAppointmentBound) + ":" + (new Date().getTime() + lowerAppointmentBound));
+			return inRange;
 		});
 		console.log(allAppointments);
 		if (allAppointments.length == 0) return;
@@ -115,18 +125,20 @@ function messageLoop() {
 			}
 			var appointmentsMap = {};
 			for (var i = 0; i < data.Items.length; i++) {
-				appointmentsMap[date.Items[i].Id] = true;
+				appointmentsMap[data.Items[i].Id.S] = true;
 			}
 			var unnotificated = allAppointments.filter(function(a) {
-				return !appointmentsMap[a.id];
+				return !appointmentsMap[a._id];
 			});
-			console.log(unnotificated);
+			if (unnotificated.length == 0) return;
 			var writeRequests = [];
 			for (var i = 0; i < unnotificated.length; i++) {
 				writeRequests.push({
 					"PutRequest": {
-						"Key": {
-							"S": unnotificated[i].appid.toString()
+						"Item": {
+							"Id": {
+								"S": unnotificated[i]._id.toString()
+							}
 						}
 					}
 				});
