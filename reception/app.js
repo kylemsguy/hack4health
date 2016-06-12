@@ -47,6 +47,7 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 			appid: app.appid
 		});
 		app.checkedIn = true;
+		self.refresh();
 	};
 	self.endApp = function(app) {
 		$http.post(BACKEND_URL + "/endApp", {
@@ -56,6 +57,7 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 		console.log(app);
 		var index = $scope.activeAppointments.indexOf(app);
 		$scope.activeAppointments.splice(index, 1);
+		self.refresh();
 	};
 	self.refresh();
 	var timer = AUTO_REFRESH? setInterval(function() {
@@ -72,6 +74,7 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 	$scope.doctorName = "";
 	$scope.appointmentDate = new Date();
 	$scope.time = "9";
+	$scope.estimateTime = 20;
 	function parseTime(s) {
 		if (s.indexOf(":") == -1) return parseInt(s);
 		var a = s.split(":");
@@ -85,7 +88,8 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 			month: $scope.appointmentDate.getMonth() + 1,
 			day: $scope.appointmentDate.getDate(),
 			year: $scope.appointmentDate.getFullYear(),
-			time: parseTime($scope.time)
+			time: parseTime($scope.time),
+			estimateTime: $scope.estimateTime
 		}).then(function(response) {
 			alert("Appointment saved.");
 		}, function(error) {
