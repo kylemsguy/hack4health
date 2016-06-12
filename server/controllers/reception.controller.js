@@ -27,6 +27,7 @@ module.exports = function(app) {
                         sendStuff.push(doc);
                     }
                 });
+                sortedDocs(docs);
                 
                 res.send(docs);
             });
@@ -95,7 +96,50 @@ module.exports = function(app) {
 
 
 //takes the docs and sort them according to time
-// function(docs){
-//     var checkedIn = [];
+//put the time into two groups, one checked in and one not checked in
+function sortedDocs(docs){
+    var checkedIn = [];
+    var notCheckedIn = [];
+    docs.forEach(function(doc){
+        if (doc.checkedIn === true){
+            checkedIn.push(doc);
+        } else {
+            notCheckedIn.push(doc);
+        }
+    });
     
-// }
+    checkedIn.sort(function(a,b){
+        if (a.time < b.time){
+            return -1;
+        } else if (a.time > b.time) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+    
+     notCheckedIn.sort(function(a,b){
+        if (a.time < b.time){
+            return -1;
+        } else if (a.time > b.time) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+    
+    
+    var returnedStuff = checkedIn.concat(notCheckedIn);
+    return returnedStuff;
+    
+    
+        
+   
+    
+    //return stuff;
+}
+
+//docs.sort
+
+
+

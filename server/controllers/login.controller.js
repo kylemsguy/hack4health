@@ -65,7 +65,7 @@ module.exports = function(app) {
     	        if (err) throw err;
 	            res.send("successfully booked an appointment");
 	        });  
-	        res.send("hey");
+	        
 	    });
 	    
 	    //update user info
@@ -76,6 +76,7 @@ module.exports = function(app) {
 		        if (err) throw err;
 		    });
 		    console.log(user);
+		    
 		    
 		});
 		
@@ -107,11 +108,5 @@ module.exports = function(app) {
             console.log("successfully made new clinic");
         });
 	});
-
-
-    
-
-    
-
     
 };
