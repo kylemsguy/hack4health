@@ -38,12 +38,12 @@ public class ApiWrapper {
 
     private OkHttpClient client;
 
-    private ApiWrapper(){
+    private ApiWrapper() {
         client = new OkHttpClient();
     }
 
-    public static ApiWrapper getInstance(){
-        if(instance == null) {
+    public static ApiWrapper getInstance() {
+        if (instance == null) {
             instance = new ApiWrapper();
         }
         return instance;
@@ -69,7 +69,7 @@ public class ApiWrapper {
 
         Response response = client.newCall(request).execute();
 
-        if(!response.isSuccessful()){
+        if (!response.isSuccessful()) {
             throw new IOException("Unexpected code " + response);
         }
 
@@ -79,17 +79,19 @@ public class ApiWrapper {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
                     @Override
-                    public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                    public Date deserialize(JsonElement json, Type typeOfT,
+                                            JsonDeserializationContext context)
+                            throws JsonParseException {
                         return new Date(json.getAsJsonPrimitive().getAsLong());
                     }
                 })
                 .create();
-        Type collectionType = new TypeToken<List<LoginResponse>>(){}.getType();
-        List<LoginResponse> deserialResponse = gson.fromJson(responseStr, collectionType);
-        return deserialResponse;
+        Type collectionType = new TypeToken<List<LoginResponse>>() {
+        }.getType();
+        return gson.fromJson(responseStr, collectionType);
     }
 
-    public String sendLocationToServer(String email, Location location) throws IOException{
+    public String sendLocationToServer(String email, Location location) throws IOException {
         JsonObject json = new JsonObject();
         json.addProperty("email", email);
         json.addProperty("lat", location.getLatitude());
@@ -102,7 +104,7 @@ public class ApiWrapper {
 
         Response response = client.newCall(request).execute();
 
-        if(!response.isSuccessful()){
+        if (!response.isSuccessful()) {
             throw new IOException("Unexpected code " + response);
         }
 
