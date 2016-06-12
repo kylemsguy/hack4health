@@ -1,4 +1,4 @@
-var BACKEND_URL="https://hack4health-cherylyli.c9users.io";
+var BACKEND_URL="https://docnow.kylemsguy.com";
 var AUTO_REFRESH = false;
 angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 .controller("LoginController", function($rootScope, $location, $cookies) {
