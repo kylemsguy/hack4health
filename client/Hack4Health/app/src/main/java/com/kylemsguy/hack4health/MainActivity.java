@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnListItemClickAc
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new ApptListAdapter(this, myDataset);
+        mAdapter = new ApptListAdapter(this, this, myDataset);
         mRecyclerView.setAdapter(mAdapter);
 
         mEmail = getIntent().getStringExtra("email");
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnListItemClickAc
         Intent intent = new Intent(this, CheckInActivity.class);
         intent.putExtra("appid", myDataset.get(position).getAppid());
         intent.putExtra("checkedin", myDataset.get(position).isCheckedIn());
+        intent.putExtra("clinicname", myDataset.get(position).getClinicName());
 
         startActivity(intent);
     }

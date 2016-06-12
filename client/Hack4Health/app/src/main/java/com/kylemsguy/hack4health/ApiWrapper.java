@@ -113,4 +113,37 @@ public class ApiWrapper {
         return response.body().string();
     }
 
+    public String getApptDetails(String appid) throws IOException {
+        JsonObject json = new JsonObject();
+        json.addProperty("appid", appid);
+
+        Request request = new Request.Builder()
+                .url(APP_DETAIL)
+                .post(RequestBody.create(MEDIA_TYPE_JSON, json.toString()))
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException("Unexpected code " + response);
+        }
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+                    @Override
+                    public Date deserialize(JsonElement json, Type typeOfT,
+                                            JsonDeserializationContext context)
+                            throws JsonParseException {
+                        return new Date(json.getAsJsonPrimitive().getAsLong());
+                    }
+                })
+                .create();
+
+        String responseStr = response.body().string();
+
+        Type objType = new TypeToken<ApptDetailResponse>() {}.getType();
+
+        return gson.fromJson(responseStr, objType);
+    }
+
 }

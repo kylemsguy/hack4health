@@ -1,5 +1,7 @@
 package com.kylemsguy.hack4health;
 
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import java.util.List;
 public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHolder> {
     private List<LoginResponse> mDataset;
     private OnListItemClickAction clickAction;
+    private Context mContext;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -36,7 +39,8 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ApptListAdapter(OnListItemClickAction action, List<LoginResponse> myDataset) {
+    public ApptListAdapter(Context context, OnListItemClickAction action, List<LoginResponse> myDataset) {
+        mContext = context;
         mDataset = myDataset;
         clickAction = action;
     }
@@ -59,15 +63,48 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         //holder.mTextView.setText(mDataset[position]);
+        holder.v.setEnabled(true);
         holder.mClinicName.setText(mDataset.get(position).getClinicName());
-        Date date = mDataset.get(position).getDate();
+        final Date date = mDataset.get(position).getDate();
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ hh:mma");
         holder.mApptTime.setText(sdf.format(date).toString());
+
+        Date currDate = new Date();
+
+        long diff = currDate.getTime() - date.getTime();
+        if(diff > 1800000){ // 30min
+            // change colour
+            holder.v.setBackgroundColor(mContext.getResources().getColor(R.color.notReady));
+        } else if(diff < 0) { // past
+            // change colour
+            holder.v.setBackgroundColor(mContext.getResources().getColor(R.color.missedAppt));
+        } else {
+            // reset to default colour
+            holder.v.setBackgroundColor(mContext.getResources().getColor(R.color.normalAppt));
+        }
+
         holder.v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // get the onclick listener
-                clickAction.doAction(v, holder.getAdapterPosition());
+                Date currDate = new Date();
+                long diff = currDate.getTime() - date.getTime();
+
+                if(diff > 1800000){ // 1 hour
+                    AlertDialog builder = new AlertDialog.Builder(mContext)
+                            .setMessage("You may only check in to your appointment 1 hour before.")
+                            .setPositiveButton("Ok", null)
+                            .create();
+                    builder.show();
+                } else if(diff < 0) { // past
+                    AlertDialog builder = new AlertDialog.Builder(mContext)
+                            .setMessage("This appointment has expired.")
+                            .setPositiveButton("Ok", null)
+                            .create();
+                    builder.show();
+                } else {
+                    // get the onclick listener
+                    clickAction.doAction(v, holder.getAdapterPosition());
+                }
             }
         });
     }

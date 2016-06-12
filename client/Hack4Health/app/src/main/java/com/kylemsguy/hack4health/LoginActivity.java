@@ -380,6 +380,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    public void launchappt(View v){
+        Intent intent = new Intent(this, CheckInActivity.class);
+        /*intent.putExtra("appid", myDataset.get(position).getAppid());
+        intent.putExtra("checkedin", myDataset.get(position).isCheckedIn());
+        intent.putExtra("clinicname", myDataset.get(position).getClinicName());*/
+
+        startActivity(intent);
+    }
+
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();

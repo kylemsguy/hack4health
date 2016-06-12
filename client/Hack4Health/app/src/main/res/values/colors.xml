@@ -3,4 +3,7 @@
     <color name="colorPrimary">#ed7161</color>
     <color name="colorPrimaryDark">#545e73</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="missedAppt">#F1D1C1</color>
+    <color name="normalAppt">#90ee90</color>
+    <color name="notReady">#FFFFE5</color>
 </resources>
