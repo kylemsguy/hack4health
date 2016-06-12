@@ -76,9 +76,9 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 	$scope.time = "9";
 	$scope.estimateTime = 20;
 	function parseTime(s) {
-		if (s.indexOf(":") == -1) return parseInt(s);
+		if (s.indexOf(":") == -1) return parseInt(s, 10);
 		var a = s.split(":");
-		return parseInt(a[0]) + (parseInt(a[1])/60);
+		return parseInt(a[0], 10) + (parseInt(a[1], 10)/60);
 	}
 	$scope.submitAppointment = function() {
 		$http.post(BACKEND_URL + "/newAppointment", {
@@ -103,6 +103,7 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 	$scope.set27hours = function() {
 		$scope.appointmentDate = new Date(Date.now() + 27*60*60*1000);
 		$scope.time = $scope.appointmentDate.getHours() + ":" +
+			($scope.appointmentDate.getMinutes() < 10? "0": "") +
 			$scope.appointmentDate.getMinutes();
 	}
 })
