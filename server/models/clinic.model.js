@@ -5,7 +5,8 @@ var clinicSchema = new Schema({
    clinicName: String,
    locationLong: Number,
    locationLat: Number,
-   patients: [Number]
+   patients: [Number],
+   waitTime: Number
 });
 var Clinic = mongoose.model("Clinic", clinicSchema);
 

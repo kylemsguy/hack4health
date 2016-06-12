@@ -80,6 +80,8 @@ module.exports = function(app) {
 		    
 		});
 		
+		
+		//update how many appointments the clinic has today
 		Clinic.findOne({clinicName: req.body.clinicName}, function(err, clinic){
 			if (err) throw err;
 			console.log(clinic);
@@ -93,13 +95,15 @@ module.exports = function(app) {
 
 
     //make a new clinic
+    //waitTime must be updated every time a user checks in
 	app.post('/makeClinic', function(req, res){
 	    console.log(req.body.clinicName);
         var newClinic = Clinic ({
             clinicName: req.body.clinicName,
             locationLong: req.body.long,
             locationLat: req.body.lat,
-            patients: []
+            patients: [],
+            waitTime: 0
         });
         
         newClinic.save(function(err){

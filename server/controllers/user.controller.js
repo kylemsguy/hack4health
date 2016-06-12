@@ -102,6 +102,39 @@ module.exports = function(app) {
         });
     });
     
+    //get waitTimes of all clinics around you
+    app.post('/waitTimes', function(req, res){
+         Clinic.find({}, function(err, clinics){
+            if (err) throw err;
+            
+            clinics.forEach(function(clinic){
+                Appointment.find({'appid': { $in: clinic.patients}}, function(err, appList){
+                   if (err) throw err;
+                   console.log(clinic.patients);
+                   var time = 0;
+                   appList.forEach(function(app){
+
+                        if (app.checkedIn === true){
+                            time = time + app.estimateTime;
+                            console.log(app.estimateTime);
+                        } 
+                   });
+                   console.log(time);
+                   clinic.waitTime = time;
+                   clinic.save(function(err){
+                      if (err) throw err; 
+                   });
+            
+                });
+            });
+            
+            Clinic.find({}, function(err, returnObject){
+                if (err) throw err;
+                res.send(returnObject);
+            });
+         });
+    });
+    
     
 };
 

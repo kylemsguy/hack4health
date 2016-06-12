@@ -8,9 +8,9 @@ module.exports = function(app) {
     app.use(bodyParser.urlencoded({extended:true}));
     app.use(bodyParser.json());
 
-
+    //endpoint: post to /clinicLogin
     //receive clinicName
-    //send list of appid, checkedIn, name
+    //send sorted list of appid, checkedIn, name, etc
     app.post('/clinicLogin', function(req, res){
         console.log(req.body.clinicName);
         Clinic.findOne({clinicName: req.body.clinicName}, function(err, clinic){
@@ -18,7 +18,7 @@ module.exports = function(app) {
             var appDetailList = [];
             console.log(clinic);
         
-            
+            //find all appointments for one clinic, sort them, and send back
             Appointment.find({'appid': { $in: clinic.patients}}, function(err, docs){
                 if (err) throw err;
                 var sendStuff = [];
@@ -28,28 +28,26 @@ module.exports = function(app) {
                     }
                 });
                 sortedDocs(docs);
-                
                 res.send(docs);
             });
-            
         });
     });
     
-    //find appid and update checkedin to true
-    //prompt user 
+    //return "success"
     app.post('/checkIn', function(req, res){
+        console.log("checkin request received");
         Appointment.findOne({appid: req.body.appid}, function(err, app){
             if (err) throw err;
             app.checkedIn = true;
             app.save(function(err){
                 if (err) throw err;
-                console.log("I saved my app checkin");
+                //console.log("checkin complete for appointment");
             });
+            
             //update the clinic's patient's list
             //get the clinic name
             Clinic.findOne({clinicName: app.clinicName}, function(err, clinic){
                 if (err) throw err;
-                var appList = clinic.patients;
                 console.log("patient list: " + clinic.patients);
                 Appointment.find({'appid': { $in: clinic.patients}}, function(err, appList){
                     if (err) throw err;
@@ -57,18 +55,20 @@ module.exports = function(app) {
                     sortedDocs(appList);
                     //res.send(appList);
                     res.send("success");
+                    console.log("checkin request done");
                 });
             });
-            
-            
-            //res.send("success");
         });
     });
                                                                                                       
     //receives clinicName & appid
     //updates pt data to remove appointment,
-    //updates clinic.patients to remove the element
+    //updates clinic.patients to remove the element,
+    //updates the Appointment info for the appid to ended = true
+    //send back "success"
     app.post('/endApp', function(req, res){
+        console.log("received request for ending/cancelling appointment");
+        //find clinic and update patients array to leave out the appid for this req.body.appid
         Clinic.findOne({clinicName: req.body.clinicName}, function(err, clinic){
             if (err) throw err;
             var finished = clinic.patients.indexOf(req.body.appid);
@@ -77,7 +77,7 @@ module.exports = function(app) {
                   if (err) throw err; 
             });
             
-        
+            //cancel the appointment so ended = true and remove the appid from the user's list of appointments
             Appointment.findOne({appid: req.body.appid}, function(err, appDetails){
                 if(err)throw err;
                 
@@ -94,23 +94,14 @@ module.exports = function(app) {
                     });
                 });
                 
-                // Appointment.remove({appid: req.body.appid}, function(err){
-                //     if (err) throw err;
-                // });
-                
+                console.log('finished ending/cancelling appointment');
                 res.send("success");
             });  
-            
-           
-
         });
-        
-        
-       
     });
     
     
-    //spits out all appointments
+    //spits out all appointments that are not cancelled
     app.post('/allappointments', function(req, res){
         Appointment.find({}, function(err, data){
             if (err) throw err;
