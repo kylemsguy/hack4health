@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by kyle on 11/06/16.
  */
-public class LoginResponse {
+public class LoginResponse implements Comparable<LoginResponse> {
     private int appid;
     private String email;
     private String clinicName;
@@ -35,5 +35,10 @@ public class LoginResponse {
 
     public Date getDate() {
         return date;
+    }
+
+    @Override
+    public int compareTo(LoginResponse another) {
+        return (int) (date.getTime() - another.getDate().getTime());
     }
 }

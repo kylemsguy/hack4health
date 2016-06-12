@@ -13,6 +13,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by kyle on 11/06/16.
@@ -67,11 +68,12 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
         holder.mClinicName.setText(mDataset.get(position).getClinicName());
         final Date date = mDataset.get(position).getDate();
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy @ hh:mma");
+        sdf.setTimeZone(TimeZone.getDefault());
         holder.mApptTime.setText(sdf.format(date).toString());
 
         Date currDate = new Date();
 
-        long diff = currDate.getTime() - date.getTime();
+        long diff = date.getTime() - currDate.getTime();
         if(diff > 1800000){ // 30min
             // change colour
             holder.v.setBackgroundColor(mContext.getResources().getColor(R.color.notReady));
@@ -87,9 +89,9 @@ public class ApptListAdapter extends RecyclerView.Adapter<ApptListAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Date currDate = new Date();
-                long diff = currDate.getTime() - date.getTime();
+                long diff = date.getTime() - currDate.getTime();
 
-                if(diff > 1800000){ // 1 hour
+                if(diff > 1800000){ // 30min
                     AlertDialog builder = new AlertDialog.Builder(mContext)
                             .setMessage("You may only check in to your appointment 1 hour before.")
                             .setPositiveButton("Ok", null)

@@ -79,8 +79,9 @@ public class CheckInActivity extends AppCompatActivity {
                 } catch(IOException e){
                     e.printStackTrace();
                 }
+                return null;
             }
-        }
+        };
     }
 
 }

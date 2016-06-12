@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,7 @@ public class ApiWrapper {
 
         String responseStr = response.body().string();
         System.out.println(responseStr);
+        response.body().close();
 
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
@@ -84,13 +86,18 @@ public class ApiWrapper {
                     public Date deserialize(JsonElement json, Type typeOfT,
                                             JsonDeserializationContext context)
                             throws JsonParseException {
-                        return new Date(json.getAsJsonPrimitive().getAsLong());
+                        return new Date(json.getAsJsonPrimitive().getAsLong() + (3600000 * 4));
                     }
                 })
                 .create();
         Type collectionType = new TypeToken<List<LoginResponse>>() {
         }.getType();
-        return gson.fromJson(responseStr, collectionType);
+
+        List<LoginResponse> parsedObjs = gson.fromJson(responseStr, collectionType);
+
+        Collections.sort(parsedObjs);
+
+        return parsedObjs;
     }
 
     public String sendLocationToServer(String email, Location location) throws IOException {
@@ -107,10 +114,13 @@ public class ApiWrapper {
         Response response = client.newCall(request).execute();
 
         if (!response.isSuccessful()) {
+            response.body().close();
             throw new IOException("Unexpected code " + response);
         }
 
-        return response.body().string();
+        String body = response.body().string();
+        response.body().close();
+        return body;
     }
 
     public ApptDetailResponse getApptDetails(int appid) throws IOException {
@@ -125,6 +135,7 @@ public class ApiWrapper {
         Response response = client.newCall(request).execute();
 
         if (!response.isSuccessful()) {
+            response.body().close();
             throw new IOException("Unexpected code " + response);
         }
 
@@ -140,6 +151,8 @@ public class ApiWrapper {
                 .create();
 
         String responseStr = response.body().string();
+
+        response.body().close();
 
         Type objType = new TypeToken<ApptDetailResponse>() {}.getType();
 
@@ -158,9 +171,10 @@ public class ApiWrapper {
         Response response = client.newCall(request).execute();
 
         if (!response.isSuccessful()) {
+            response.body().close();
             throw new IOException("Unexpected code " + response);
         }
-
+        response.body().close();
         return true;
     }
 

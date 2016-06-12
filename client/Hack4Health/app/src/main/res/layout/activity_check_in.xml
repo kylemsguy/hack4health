@@ -3,57 +3,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#FFFFFF"
     tools:context="com.kylemsguy.hack4health.CheckInActivity">
 
     <TextView
         android:id="@+id/clinicName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ClinicName"
-        android:textSize="22sp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="ClinicName"
+        android:textSize="22sp" />
 
     <TextView
-        android:text="DoctorName"
-        android:textSize="26sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/clinicName"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:visibility="gone"/>
+        android:text="DoctorName"
+        android:textSize="26sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/timeToAppt"
-        android:text="TimeToAppt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/clinicName"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="107dp" />
+        android:layout_marginTop="107dp"
+        android:text="TimeToAppt" />
 
     <TextView
         android:id="@+id/distanceToAppt"
-        android:text="DistanceToAppt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/timeToAppt"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="101dp" />
+        android:layout_marginTop="101dp"
+        android:text="DistanceToAppt" />
 
     <Button
-        android:text="Check In"
+        android:id="@+id/btnCheckIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="checkIn"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/btnCheckIn" />
+        android:onClick="checkIn"
+        android:text="Check In" />
 
 </RelativeLayout>
