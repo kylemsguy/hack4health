@@ -35,7 +35,7 @@ angular.module("app", ["ngRoute", "ngResource", "ngCookies"])
 	self.formatTime = function(time) {
 		var firstPart = Math.floor(time);
 		var fractionalPart = time - firstPart;
-		var minutes = (fractionalPart * 60).toString();
+		var minutes = Math.round(fractionalPart * 60).toString();
 		if (minutes.length < 2) {
 			minutes = "0" + minutes;
 		}
