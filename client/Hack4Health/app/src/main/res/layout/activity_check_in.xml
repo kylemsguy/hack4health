@@ -29,4 +29,28 @@
         android:layout_marginTop="10dp"
         android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/timeToAppt"
+        android:text="TimeToAppt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/clinicName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="107dp" />
+
+    <TextView
+        android:id="@+id/distanceToAppt"
+        android:text="DistanceToAppt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timeToAppt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="101dp" />
+
+    <Button
+        android:text="Check In"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="checkIn"/>
+
 </RelativeLayout>

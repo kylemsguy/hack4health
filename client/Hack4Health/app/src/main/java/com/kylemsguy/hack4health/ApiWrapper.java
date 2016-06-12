@@ -113,7 +113,7 @@ public class ApiWrapper {
         return response.body().string();
     }
 
-    public String getApptDetails(String appid) throws IOException {
+    public ApptDetailResponse getApptDetails(int appid) throws IOException {
         JsonObject json = new JsonObject();
         json.addProperty("appid", appid);
 
@@ -144,6 +144,24 @@ public class ApiWrapper {
         Type objType = new TypeToken<ApptDetailResponse>() {}.getType();
 
         return gson.fromJson(responseStr, objType);
+    }
+
+    public boolean checkIn(int appid) throws IOException {
+        JsonObject json = new JsonObject();
+        json.addProperty("appid", appid);
+
+        Request request = new Request.Builder()
+                .url(LOCATION)
+                .post(RequestBody.create(MEDIA_TYPE_JSON, json.toString()))
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException("Unexpected code " + response);
+        }
+
+        return true;
     }
 
 }
