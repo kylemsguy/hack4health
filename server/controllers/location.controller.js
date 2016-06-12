@@ -16,7 +16,7 @@ module.exports = function(app) {
     
     app.post('/location', function(req, res){
         var query = {email: req.body.email};
-        console.log(req.body.email + ' ' + req.body.long);
+        console.log("Updated location for "+req.body.email);
         
         
         //update the user and get their appointment list
@@ -27,7 +27,7 @@ module.exports = function(app) {
             //find active appointments, and by active I mean checkedIn appointments
             Appointment.find({'appid': { $in: data.appointments}}, function(err, apps){
                 if (err) throw err;
-                res.send(apps);
+                 
                 
                 //for each checkedIn appointment, go update distance, then save it
                 apps.forEach(function(oneApp){
@@ -47,6 +47,7 @@ module.exports = function(app) {
                             oneApp.save(function(err){
                                 if (err) throw err; 
                             });
+                        res.send("success");
                         });
                     } 
                 });
@@ -89,7 +90,7 @@ function find_distance_between_two_points( point1_lat,point2_lat,point1_lon, poi
     var distance = EARTH_RADIUS_IN_METERS * Math.sqrt(squareDis);
 
 
-    return (distance);
+    return (distance/1000);
 }
 
 

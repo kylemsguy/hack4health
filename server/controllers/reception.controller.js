@@ -64,7 +64,7 @@ module.exports = function(app) {
     //receives clinicName & appid
     //updates pt data to remove appointment,
     //updates clinic.patients to remove the element,
-    //updates the Appointment info for the appid to ended = true
+    //doesn't do much for the appointment bc of the appid system for the apps, sorrrrry
     //send back "success"
     app.post('/endApp', function(req, res){
         console.log("received request for ending/cancelling appointment");
@@ -81,10 +81,10 @@ module.exports = function(app) {
             Appointment.findOne({appid: req.body.appid}, function(err, appDetails){
                 if(err)throw err;
                 
-                appDetails.ended = true;
-                appDetails.save(function(err){
-                   if (err) throw err; 
-                });
+                // appDetails.ended = true;
+                // appDetails.save(function(err){
+                //   if (err) throw err; 
+                // });
                 
                 User.findOne({email: appDetails.email}, function(err, userData){
                     if(err)throw err;

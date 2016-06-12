@@ -81,7 +81,7 @@ module.exports = function(app) {
                             });
                             console.log("estimated time: " + time);
                             res.send({
-                                time: time,
+                                time: time || 60,
                                 checkedIn: appdetail.checkedIn
                             });
                             
@@ -89,6 +89,12 @@ module.exports = function(app) {
                         
                         console.log(patientsBefore);
                         
+                    }
+                    else {
+                        res.send({
+                           time: 0,
+                           checkedIn: appdetail.checkedIn
+                        });
                     }
                     
                     //console.log(index);
