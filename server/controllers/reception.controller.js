@@ -55,7 +55,8 @@ module.exports = function(app) {
                     if (err) throw err;
                     console.log(appList);
                     sortedDocs(appList);
-                    res.send(appList);
+                    //res.send(appList);
+                    res.send("success");
                 });
             });
             
